@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
+    private Board board;
     private int minimumPlayers = 2;
     private int maximumPlayers = 4;
     private int pirateNumber = 7;
@@ -14,10 +15,10 @@ public class Game {
 
     private void startFirstRound(){
        var currentPlayer = players.get(currentPlayerNum);
-       currentPlayer.startVillage();
-       currentPlayer.startRoad();
-       int position = currentPlayer.startVillage();
-       currentPlayer.startRoad();
+       currentPlayer.startVillage(UI, board);
+       currentPlayer.startRoad(UI, board);
+       int position = currentPlayer.startVillage(UI, board);
+       currentPlayer.startRoad(UI, board);
        currentPlayer.giveStartCards(position);
        if (currentPlayerNum + 1 == players.size()){
            startRegularTurn();
@@ -58,15 +59,15 @@ public class Game {
                break;
            case "switch":
                startRegularTurn(); // TODO zkontrolovat jestli funguje
-               break;
+               return;
            case "buy":
-               players.get(currentPlayerNum).startBuy();
+               players.get(currentPlayerNum).startBuy(UI, board);
                break;
            case "sell":
-               players.get(currentPlayerNum).startSell();
+               players.get(currentPlayerNum).startSell(UI, players);
                break;
-           default:
        }
+        processCommands();
 
     }
 
