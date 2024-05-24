@@ -7,23 +7,23 @@ import java.util.List;
 
 public class Board {
     public HashMap<Integer, List<Tile>> numbersToTiles;
-    public HashMap<Player, List<Integer>> reachableNodesByPlayer;
+    public HashMap<Player, List<Integer>> reachableNodesForRoad;
+    public HashMap<Player, List<Integer>> reachableNodesForBuilding;
     public HashMap<Integer, List<Integer>> neighbourNodes;
+
+    public List<Building> buildings;
+    public HashMap<Integer, List<Road>> roads;
     public List<Tile> tilesList;
 
     public Board(List<Player> players){
         tilesList = new ArrayList<Tile>();
         numbersToTiles = new HashMap<Integer, List<Tile>>();
-        reachableNodesByPlayer = new HashMap<Player, List<Integer>>();
         neighbourNodes = new HashMap<Integer, List<Integer>>();
+        roads = new HashMap<Integer, List<Road>>();
         createTiles();
-        for (var player: players){
-            reachableNodesByPlayer.put(player, new ArrayList<Integer>());
-        }
         createNeighbours();
+        createBuildSites();
     }
-
-
 
     private void createNeighbours(){
         List<Integer> neighbours = List.of(2, 9);
@@ -177,14 +177,33 @@ public class Board {
             numbersToTiles.get(numbers[tileIndex]).add(newTile);
         }
     }
-    public void createRoad(int buildPosition) {
-        // TODO
+    public void createRoad(Position position, int currentPlayer) {
+        var road = new Road(position.start, position.end, currentPlayer);
+
+        if (!roads.containsKey(position.start)){
+            roads.put(position.start, new ArrayList<Road>());
+        }
+        if (!roads.containsKey(position.end)){
+            roads.put(position.end, new ArrayList<Road>());
+        }
+        roads.get(position.start).add(road);
+        roads.get(position.end).add(road);
     }
 
-    public void createVillage(int buildPosition) {
-        // TODO
+    private void createBuildSites(){
+        buildings = new ArrayList<Building>();
+        for (int i = 0; i <= 54; i++){
+            buildings.add(new Building(null, null));
+        }
+    }
+    public void createVillage(int buildPosition, int currentPlayer) {
+        var buildSpot = buildings.get(buildPosition);
+        buildSpot.type = PawnType.Village;
+        buildSpot.owner = currentPlayer;
+
     }
     public void createTown(int buildPosition) {
-        // TODO
+        var buildSpot = buildings.get(buildPosition);
+        buildSpot.type = PawnType.Town;
     }
 }

@@ -13,11 +13,108 @@ public class UserInterface {
     }
 
     public String receiveCommand(){
-        // TODO
-        return null;
+        Scanner sc = new Scanner(System.in);
+        System.out.printf(String.format("Enter command. Type switch, sell, buy or stats"));
+        return sc.nextLine();
     }
-    public void displayBoard(){
+
+    private String insertBuildPlace(){
+        // TODO change building all color
+        String character = "X";
+        return character;
+    }
+    private String insertTileNumber(){
+        // TODO change
+        String character = "11";
+        return character;
+    }
+
+
+    private String insertRoad(int level){
+       String character = "/";
+        if (level == 2) {
+           character = "|";
+       }
+        else if (level == 1){
+            character = "\\";
+        }
+        // TODO barva a cesty
+        return character;
+    }
+    private void changeMaterialColor(){
         // TODO
+    }
+
+    private void printLastRow(int numberOfTiles)
+    {
+        // TODO spacing
+        StringBuilder line = new StringBuilder();
+        // print first line
+        for (int i = 0; i < numberOfTiles; i++){
+            line.append("  ").append(insertBuildPlace());
+        }
+        System.out.println(line);
+    }
+    private void printRow(int numberOfTiles) {
+        // TODO spacing
+        StringBuilder line = new StringBuilder();
+        // print first line
+        for (int i = 0; i < numberOfTiles; i++){
+             line.append("  ").append(insertBuildPlace());
+        }
+        System.out.println(line);
+        // print second line
+        for (int i = 0; i < numberOfTiles; i++){
+            line.append(insertRoad(0));
+            changeMaterialColor();
+            line.append("***");
+            line.append(insertRoad((1)));
+        }
+        System.out.println(line);
+        // print third line
+        for (int i = 0; i < numberOfTiles; i++){
+            line.append(insertBuildPlace());
+            changeMaterialColor();
+            line.append("*****");
+        }
+        line.append(insertBuildPlace());
+        System.out.println(line);
+        // print fourth line
+        for (int i = 0; i < numberOfTiles; i++){
+            line.append(insertRoad(2));
+            changeMaterialColor();
+            line.append("***" + insertTileNumber() + "***" );
+        }
+        line.append(insertRoad(2));
+        System.out.println(line);
+
+        // print fifth line
+        for (int i = 0; i < numberOfTiles; i++){
+            line.append(insertBuildPlace());
+            changeMaterialColor();
+            line.append("*****");
+        }
+        line.append(insertBuildPlace());
+        System.out.println(line);
+
+        // print sixth line
+        for (int i = 0; i < numberOfTiles; i++){
+            line.append(insertRoad(0));
+            changeMaterialColor();
+            line.append("***");
+            line.append(insertRoad((1)));
+        }
+        System.out.println(line);
+
+    }
+
+    public void displayBoard(Board board){
+        printRow(3);
+        printRow(4);
+        printRow(5);
+        printRow(4);
+        printRow(3);
+        printLastRow(3);
     }
     public int choosePlayers() {
         int numberOfPlayers = 0;
@@ -65,6 +162,12 @@ public class UserInterface {
     public void showInvalidSell() {
         System.out.printf(String.format("Sell was unsuccessful"));
     }
+    public void unsuccessfulBuying() {
+        System.out.printf(String.format("Buying was unsuccessful"));
+    }
+    public void successfulBuying() {
+        System.out.printf(String.format("Buying was successful"));
+    }
 
     public void showValidSell() {
         System.out.printf(String.format("Sell was successful"));
@@ -84,5 +187,17 @@ public class UserInterface {
         }
         Scanner in = new Scanner(System.in);
         return in.nextInt();
+    }
+
+    public String getBuyRequest() {
+        Scanner sc = new Scanner(System.in);
+        System.out.printf(String.format("Enter pawn you want to buy. Type village, town, road or stop if you want to stop this action"));
+        return sc.nextLine();
+    }
+
+    public Position getRoadNumbers() {
+        System.out.printf(String.format("Type numbers where to place road, type two beginning and end"));
+        Scanner in = new Scanner(System.in);
+        return new Position(in.nextInt(), in.nextInt());
     }
 }

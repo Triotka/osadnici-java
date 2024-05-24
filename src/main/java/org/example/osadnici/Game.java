@@ -6,7 +6,7 @@ public class Game {
     private Board board;
     private int minimumPlayers = 2;
     private int maximumPlayers = 4;
-    private int pirateNumber = 7;
+    private int unluckyNumber = 7;
     private int currentPlayerNum;
     private List<Player> players;
     private UserInterface UI;
@@ -19,28 +19,45 @@ public class Game {
        currentPlayer.startRoad(UI, board);
        int position = currentPlayer.startVillage(UI, board);
        currentPlayer.startRoad(UI, board);
-       currentPlayer.giveStartCards(position);
        if (currentPlayerNum + 1 == players.size()){
-           startRegularTurn();
+           return;
        }
        switchPlayers();
        startFirstRound();
 
 
     }
-    private void doPirateConsequences(){
-        // TODO
+    private void doSevenConsequences(){
+        for (var player: players){
+            if (player.countCardSum() > unluckyNumber){
+                player.loseCards();
+            }
+        }
     }
     private void distributeCards(){
         int rolledNumber = dice.getRolledNumber();
-        // TODO
+        var tiles = board.numbersToTiles.get(rolledNumber);
+        for (var tile: tiles){
+            var group = tile.getNodeGroup();
+            for (var index : group)
+            {
+                var building = board.buildings.get(index);
+                if (building.type == PawnType.Village){
+                    players.get(building.owner).giveCards(1, tile.getMaterial());
+                }
+                else if (building.type == PawnType.Town){
+                    players.get(building.owner).giveCards(2, tile.getMaterial());
+                }
+
+            }
+        }
     }
 // rolls dice and does expected action according to it
     private void rollDice(){
         dice.roll(UI);
         int rolledNumber = dice.getRolledNumber();
-        if (rolledNumber == pirateNumber){
-            doPirateConsequences();
+        if (rolledNumber == unluckyNumber){
+            doSevenConsequences();;
         }
         else{
             distributeCards();
@@ -59,7 +76,7 @@ public class Game {
                UI.displayStats(players.get(currentPlayerNum));
                break;
            case "switch":
-               startRegularTurn(); // TODO zkontrolovat jestli funguje
+               startRegularTurn();
                return;
            case "buy":
                players.get(currentPlayerNum).startBuy(UI, board);
@@ -75,6 +92,7 @@ public class Game {
     public void play(){
         setPlayers();
         startFirstRound();
+        startRegularTurn();
     }
     private void switchPlayers(){
         currentPlayerNum = (currentPlayerNum + 1) % players.size();
