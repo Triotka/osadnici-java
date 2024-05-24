@@ -32,6 +32,7 @@ public class Game {
         // TODO
     }
     private void distributeCards(){
+        int rolledNumber = dice.getRolledNumber();
         // TODO
     }
 // rolls dice and does expected action according to it
