@@ -13,6 +13,7 @@ public class Player {
         initCards();
         giveStartCards();
         points = 0;
+        initPawns();
     }
     private void initPawns(){
         pawnList = new HashMap<PawnType, PawnSet>();
@@ -114,7 +115,7 @@ public class Player {
         }
     }
     private void buildTown(UserInterface UI, Board board){
-        UI.displayBuildBoard();
+        UI.displayBuildBoard(board);
         int buildPosition = UI.getBuildNumber("town");
         if (buildPosition == -1) { // exit command
             return;
@@ -129,7 +130,7 @@ public class Player {
         evaluateWinner(UI);
     }
     private void buildRoad(UserInterface UI, Board board){
-        UI.displayBuildBoard();
+        UI.displayBuildBoard(board);
         var position = UI.getRoadNumbers();
         if (position.start == -1 || position.end == -1) { // exit command
             return;
@@ -144,7 +145,7 @@ public class Player {
         pawnList.get(PawnType.Road).numberOfPawns --;
     }
     private void buildVillage(UserInterface UI, Board board){
-        UI.displayBuildBoard();
+        UI.displayBuildBoard(board);
         int buildPosition = UI.getBuildNumber("village");
         if (buildPosition == -1) { // exit command
             return;
@@ -226,7 +227,7 @@ public class Player {
 
 
 public void startRoad(UserInterface UI, Board board) {
-    UI.displayBuildBoard();
+    UI.displayBuildBoard(board);
     Position roadPosition = UI.getRoadNumbers();
     while (!roadPosValid()){
         roadPosition = UI.getRoadNumbers();
@@ -236,7 +237,7 @@ public void startRoad(UserInterface UI, Board board) {
 
 }
 public int startVillage(UserInterface UI, Board board) {
-    UI.displayBuildBoard();
+    UI.displayBuildBoard(board);
     int buildPosition = UI.getBuildNumber("village");
     while (!villagePosValid()){
         buildPosition = UI.getBuildNumber("village");

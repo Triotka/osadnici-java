@@ -12,7 +12,6 @@ public class Game {
     private UserInterface UI;
     private Dice dice;
 
-
     private void startFirstRound(){
        var currentPlayer = players.get(currentPlayerNum);
        currentPlayer.startVillage(UI, board);
@@ -90,7 +89,10 @@ public class Game {
     }
 
     public void play(){
+        dice = new Dice();
+        UI = new UserInterface();
         setPlayers();
+        board = new Board(players);
         startFirstRound();
         startRegularTurn();
     }
