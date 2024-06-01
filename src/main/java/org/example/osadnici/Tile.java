@@ -1,27 +1,12 @@
 package org.example.osadnici;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Tile {
-    private List<Integer> nodeGroup;
-    private Material material;
-    private int number;
-    public Tile(List<Integer> nodeGroup, Material material, int number){
-        this.nodeGroup = nodeGroup;
-        this.number = number;
-        this.material = material;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    public List<Integer> getNodeGroup() {
-        return nodeGroup;
-    }
-
-    public Material getMaterial() {
-        return material;
-    }
+/**
+ * Represents a tile on the game board.
+ * Stores type of material it produces,
+ * number on the tile that can be rolled
+ * and indexes that creates it
+ */
+public record Tile(List<Integer> nodeGroup, Material material, int number) {
 }

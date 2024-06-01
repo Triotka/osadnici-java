@@ -1,31 +1,46 @@
 package org.example.osadnici;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Represents the game board for the game.
+ * This class manages the tiles, roads, buildings, and their relationships on the board.
+ */
 public class Board {
+    /** Mapping of dice numbers to corresponding tiles. */
     public HashMap<Integer, List<Tile>> numbersToTiles;
-    public HashMap<Player, List<Integer>> reachableNodesForRoad;
-    public HashMap<Player, List<Integer>> reachableNodesForBuilding;
+
+    /** Mapping of nodes to their neighboring nodes. */
     public HashMap<Integer, List<Integer>> neighbourNodes;
 
+    /** List of buildings on the board. */
     public List<Building> buildings;
+
+    /** Mapping of start positions to corresponding roads. */
     public HashMap<Integer, List<Road>> roads;
+
+    /** List of all tiles on the board. */
     public List<Tile> tilesList;
 
-    public Board(List<Player> players){
-        tilesList = new ArrayList<Tile>();
-        numbersToTiles = new HashMap<Integer, List<Tile>>();
-        neighbourNodes = new HashMap<Integer, List<Integer>>();
-        roads = new HashMap<Integer, List<Road>>();
+    /**
+     * Constructs a new Board and initializes the tiles, neighbors, and build sites.
+     */
+    public Board() {
+        tilesList = new ArrayList<>();
+        numbersToTiles = new HashMap<>();
+        neighbourNodes = new HashMap<>();
+        roads = new HashMap<>();
         createTiles();
         createNeighbours();
         createBuildSites();
     }
 
-    private void createNeighbours(){
+    /**
+     * Initializes the neighbor relationships between nodes.
+     */
+    private void createNeighbours() {
         List<Integer> neighbours = List.of(2, 9);
         this.neighbourNodes.put(1, neighbours);
         neighbours = List.of(1, 3);
@@ -134,15 +149,17 @@ public class Board {
         this.neighbourNodes.put(53, neighbours);
         neighbours = List.of(27, 35);
         this.neighbourNodes.put(54, neighbours);
-
-
     }
-    private void createTiles(){
+
+    /**
+     * Initializes the tiles with materials and numbers.
+     */
+    private void createTiles() {
         Material[] materials = {Material.Brick, Material.Wheat, Material.Stone,
-                                Material.Wood, Material.Sheep, Material.Brick, Material.Wheat,
-                                Material.Wood, Material.Stone, null, Material.Sheep, Material.Wood,
-                                Material.Sheep, Material.Wood, Material.Wheat, Material.Stone,
-                                Material.Brick, Material.Sheep, Material.Wheat};
+                Material.Wood, Material.Sheep, Material.Brick, Material.Wheat,
+                Material.Wood, Material.Stone, null, Material.Sheep, Material.Wood,
+                Material.Sheep, Material.Wood, Material.Wheat, Material.Stone,
+                Material.Brick, Material.Sheep, Material.Wheat};
         int[] numbers = {11, 12, 9, 4, 3, 6, 10, 8, 11, 7, 5, 8, 10, 9, 4, 3, 5, 2, 6};
 
         List<List<Integer>> groups = List.of(
@@ -165,43 +182,60 @@ public class Board {
                 List.of(35, 36, 37, 41, 42, 43),
                 List.of(37, 38, 39, 43, 44, 45),
                 List.of(39, 40, 52, 45, 46, 47)
-
         );
-        for (int tileIndex = 0; tileIndex < numbers.length; tileIndex++){
+        for (int tileIndex = 0; tileIndex < numbers.length; tileIndex++) {
             Tile newTile = new Tile(groups.get(tileIndex), materials[tileIndex], numbers[tileIndex]);
             tilesList.add(newTile);
 
-            if (!numbersToTiles.containsKey(numbers[tileIndex])){
-                numbersToTiles.put(numbers[tileIndex], new ArrayList<Tile>());
+            if (!numbersToTiles.containsKey(numbers[tileIndex])) {
+                numbersToTiles.put(numbers[tileIndex], new ArrayList<>());
             }
             numbersToTiles.get(numbers[tileIndex]).add(newTile);
         }
     }
+
+    /**
+     * Creates a road on the board.
+     *
+     * @param position      the position of the road
+     * @param currentPlayer the player who owns the road
+     */
     public void createRoad(Position position, int currentPlayer) {
         var road = new Road(position.start, position.end, currentPlayer);
 
-        if (!roads.containsKey(position.start)){
-            roads.put(position.start, new ArrayList<Road>());
-        }
-        if (!roads.containsKey(position.end)){
-            roads.put(position.end, new ArrayList<Road>());
+        if (!roads.containsKey(position.start)) {
+            roads.put(position.start, new ArrayList<>());
         }
         roads.get(position.start).add(road);
-        roads.get(position.end).add(road);
     }
 
-    private void createBuildSites(){
-        buildings = new ArrayList<Building>();
-        for (int i = 0; i <= 54; i++){
+    /**
+     * Initializes the build sites with empty buildings.
+     */
+    private void createBuildSites() {
+        buildings = new ArrayList<>();
+        for (int i = 0; i <= 54; i++) {
             buildings.add(new Building(null, null));
         }
     }
+
+    /**
+     * Creates a village at the specified position.
+     *
+     * @param buildPosition the position to build the village
+     * @param currentPlayer the player who owns the village
+     */
     public void createVillage(int buildPosition, int currentPlayer) {
         var buildSpot = buildings.get(buildPosition);
         buildSpot.type = PawnType.Village;
         buildSpot.owner = currentPlayer;
-
     }
+
+    /**
+     * Upgrades a village to a town at the specified position.
+     *
+     * @param buildPosition the position to build the town
+     */
     public void createTown(int buildPosition) {
         var buildSpot = buildings.get(buildPosition);
         buildSpot.type = PawnType.Town;
