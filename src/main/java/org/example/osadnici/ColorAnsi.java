@@ -4,7 +4,7 @@ package org.example.osadnici;
  * Enum representing ANSI color codes for text formatting.
  * Each color has a corresponding ANSI code used to set the text color in a terminal.
  */
-public enum Color {
+public enum ColorAnsi {
     RESET("\033[0m"),      // Resets color
 
     BLACK("\033[0;30m"),   // Black color
@@ -32,7 +32,7 @@ public enum Color {
      *
      * @param ansiCode the ANSI code for the color
      */
-    Color(String ansiCode) {
+    ColorAnsi(String ansiCode) {
         this.ansiCode = ansiCode;
     }
 }

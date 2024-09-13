@@ -45,13 +45,13 @@ public class UserInterface {
      * @param playerIndex The index of the player.
      * @return The color associated with the player.
      */
-    private Color matchPlayerColor(int playerIndex) {
+    private ColorAnsi matchPlayerColor(int playerIndex) {
         return switch (playerIndex) {
-            case 0 -> Color.YELLOW;
-            case 1 -> Color.GREEN;
-            case 2 -> Color.BLUE;
-            case 3 -> Color.RED;
-            default -> Color.WHITE;
+            case 0 -> ColorAnsi.YELLOW;
+            case 1 -> ColorAnsi.GREEN;
+            case 2 -> ColorAnsi.BLUE;
+            case 3 -> ColorAnsi.RED;
+            default -> ColorAnsi.WHITE;
         };
     }
 
@@ -61,16 +61,16 @@ public class UserInterface {
      * @param material The material type.
      * @return The color associated with the material.
      */
-    private Color matchMaterialColor(Material material) {
+    private ColorAnsi matchMaterialColor(Material material) {
         if (material == null) {
-            return Color.WHITE;
+            return ColorAnsi.WHITE;
         }
         return switch (material) {
-            case Material.Brick -> Color.RED;
-            case Material.Wood -> Color.GREEN;
-            case Material.Sheep -> Color.PURPLE;
-            case Material.Wheat -> Color.YELLOW;
-            case Material.Stone -> Color.BLUE;
+            case Material.Brick -> ColorAnsi.RED;
+            case Material.Wood -> ColorAnsi.GREEN;
+            case Material.Sheep -> ColorAnsi.PURPLE;
+            case Material.Wheat -> ColorAnsi.YELLOW;
+            case Material.Stone -> ColorAnsi.BLUE;
         };
     }
     /**
@@ -91,7 +91,7 @@ public class UserInterface {
         var building = board.buildings.get(buildPlaceIndex);
         if (building.type != null) {
             var color = matchPlayerColor(building.owner).get();
-            var restart = Color.RESET.get();
+            var restart = ColorAnsi.RESET.get();
             if (building.type == PawnType.Village) {
                 character = color + "VV" + restart;
             } else if (building.type == PawnType.Town)
@@ -113,7 +113,7 @@ public class UserInterface {
         var tile = board.tilesList.get(tileIndex);
         var number = String.format("%02d", tile.number());
         var color = matchMaterialColor(tile.material()).get();
-        var restart = Color.RESET.get();
+        var restart = ColorAnsi.RESET.get();
         return color + number + restart;
     }
 
@@ -146,7 +146,7 @@ public class UserInterface {
             for (var road : listOfRoads) {
                 if (road.endPosition == currentRoadPosition.end) {
                     var color = matchPlayerColor(road.owner).get();
-                    var restart = Color.RESET.get();
+                    var restart = ColorAnsi.RESET.get();
                     return color + character + restart;
                 }
             }
