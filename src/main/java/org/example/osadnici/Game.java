@@ -17,7 +17,7 @@ public class Game {
     /** The list of players in the game. */
     private List<Player> players;
     /** The user interface for interacting with the game. */
-    private UserInterface UI;
+    private UserInterface UI; //TODO erase
     /** The dice used in the game. */
     private Dice dice;
 
@@ -76,13 +76,15 @@ public class Game {
      * If the unlucky number is rolled, special consequences are triggered.
      * Otherwise, resources are distributed to the players.
      */
-    private void rollDice() {
-        dice.roll(UI);
+    public String rollDice() {
+        dice.roll();
         int rolledNumber = dice.getRolledNumber();
         if (rolledNumber == unluckyNumber) {
             doSevenConsequences();
+            return "Rolled: " + rolledNumber;
         } else {
             distributeCards();
+            return "Rolled: " + rolledNumber + " and cards given";
         }
     }
 
@@ -92,15 +94,15 @@ public class Game {
      */
     private void startRegularTurn() {
         rollDice();
-        processCommands();
+      //  processCommand();
     }
 
     /**
      * Processes commands from the user interface and executes the corresponding actions.
      * Commands include "stats", "switch", "buy", and "sell".
      */
-    private void processCommands() {
-        var command = UI.receiveCommand();
+    // TODO smazat UI
+    public void processCommand(String command) {
         switch (command) {
             case "stats":
                 UI.displayStats(players.get(currentPlayerNum));
@@ -116,7 +118,6 @@ public class Game {
                 players.get(currentPlayerNum).startSell(UI, players);
                 break;
         }
-        processCommands();
     }
 
     /**
@@ -124,12 +125,13 @@ public class Game {
      */
     public void play() {
         dice = new Dice();
-        UI = new UserInterface();
+       // UI = new UserInterface();
         setPlayers();
         board = new Board();
-        startFirstRound();
-        switchPlayers();
-        startRegularTurn();
+        // TODO
+//        startFirstRound();
+//        switchPlayers();
+//        startRegularTurn();
     }
 
     /**
@@ -145,16 +147,20 @@ public class Game {
      */
     private void setPlayers() {
         this.players = new ArrayList<>();
-        int numberOfPlayers = UI.choosePlayers();
+        int numberOfPlayers = 4; // TODO UI.choseplayers alternative
         // valid range of players
         int minimumPlayers = 2;
         int maximumPlayers = 4;
         while (numberOfPlayers < minimumPlayers || numberOfPlayers > maximumPlayers) {
-            UI.printInvalidNumPlayers();
-            numberOfPlayers = UI.choosePlayers();
+//           TODO UI.printInvalidNumPlayers(); alternative
+            numberOfPlayers = 4; // TODO UI.choseplayers alternative
         }
         for (int playerIndex = 0; playerIndex < numberOfPlayers; playerIndex++) {
             players.add(new Player(playerIndex));
         }
+    }
+
+    public Player getCurrentPlayer() {
+        return players.get(currentPlayerNum);
     }
 }

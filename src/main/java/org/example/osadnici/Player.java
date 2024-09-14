@@ -2,6 +2,7 @@ package org.example.osadnici;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a player in the game.
@@ -11,6 +12,7 @@ public class Player {
     public int points;
     public HashMap<Material, MaterialCards> cardsList;
     public HashMap<PawnType, PawnSet> pawnList;
+
     /**
      * Constructs a player with the given unique index.
      *
@@ -33,6 +35,7 @@ public class Player {
         pawnList.put(PawnType.Village, new PawnSet(5));
         pawnList.put(PawnType.Town, new PawnSet(4));
     }
+
     /**
      * Initializes empty material cards
      */
@@ -41,8 +44,8 @@ public class Player {
         for (var material : Material.values()) {
             cardsList.put(material, new MaterialCards());
         }
-
     }
+
     /**
      * Counts sum of all player's cards
      * @return the sum
@@ -54,6 +57,7 @@ public class Player {
         }
         return sum;
     }
+
     /**
      * Gives player number of cards of requested material.
      *
@@ -424,16 +428,16 @@ public class Player {
             return;
         }
         try {
-            var recievedMaterial = Material.valueOf(UI.getMaterial("receive"));
+            var receivedMaterial = Material.valueOf(UI.getMaterial("receive"));
             var soldMaterial = Material.valueOf(UI.getMaterial("sell"));
             var buyer = players.get(buyerIndex);
-            if (!buyer.hasResources(recievedMaterial) || !this.hasResources(soldMaterial)) {
+            if (!buyer.hasResources(receivedMaterial) || !this.hasResources(soldMaterial)) {
                 UI.showInvalidSell();
             } else {
                 buyer.cardsList.get(soldMaterial).numberOfCards++;
-                buyer.cardsList.get(recievedMaterial).numberOfCards--;
+                buyer.cardsList.get(receivedMaterial).numberOfCards--;
                 this.cardsList.get(soldMaterial).numberOfCards--;
-                this.cardsList.get(recievedMaterial).numberOfCards++;
+                this.cardsList.get(receivedMaterial).numberOfCards++;
                 UI.showValidSell();
 
             }
@@ -483,5 +487,57 @@ public class Player {
         for (var material : Material.values()) {
             cardsList.get(material).numberOfCards = 1;
         }
+    }
+
+    /**
+     * Gets the player's points.
+     *
+     * @return the player's points
+     */
+    public int getPoints() {
+        return points;
+    }
+
+    /**
+     * Gets the player's cards list.
+     *
+     * @return the player's cards list
+     */
+    public HashMap<Material, MaterialCards> getCardsList() {
+        return cardsList;
+    }
+
+    /**
+     * Gets the player's pawn list.
+     *
+     * @return the player's pawn list
+     */
+    public HashMap<PawnType, PawnSet> getPawnList() {
+        return pawnList;
+    }
+
+    /**
+     * Gets the player's unique index.
+     *
+     * @return the player's unique index
+     */
+    public int getUniqueIndex() {
+        return uniqueIndex;
+    }
+
+    /**
+     * Increments the player's points by 1.
+     */
+    public void incrementPoints() {
+        points++;
+    }
+
+    /**
+     * Decrements the specified pawn type by 1.
+     *
+     * @param type the pawn type to decrement
+     */
+    public void decrementPawn(PawnType type) {
+        pawnList.get(type).numberOfPawns--;
     }
 }

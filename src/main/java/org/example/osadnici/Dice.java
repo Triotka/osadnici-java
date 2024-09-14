@@ -14,14 +14,12 @@ public class Dice {
      * Rolls the dice and updates the rolled number.
      * The rolled number is the sum of two random integers between 1 and 6.
      *
-     * @param UI the user interface to update with the rolled number
      */
-    public void roll(UserInterface UI) {
+    public void roll() {
         Random rand = new Random();
         int firstRolled = rand.nextInt(6) + 1;
         int secondRolled = rand.nextInt(6) + 1;
         this.rolledNumber = firstRolled + secondRolled;
-        UI.rollDice(this);
     }
 
     /**

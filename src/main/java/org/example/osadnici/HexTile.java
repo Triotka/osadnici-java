@@ -1,4 +1,5 @@
 package org.example.osadnici;
+
 import java.awt.*;
 import java.awt.geom.Path2D;
 
@@ -9,6 +10,8 @@ public class HexTile {
     private final int y;
     private final String resourceType;
     private final int number;
+    private int[] xPoints;
+    private int[] yPoints;
 
     public HexTile(int x, int y, int radius, String resourceType, int number) {
         this.x = x;
@@ -16,6 +19,35 @@ public class HexTile {
         this.radius = radius;
         this.resourceType = resourceType;
         this.number = number;
+
+        // Calculate points immediately upon creation
+        calculateVertexPoints();
+    }
+
+    public int getYPosition() {
+        return y;
+    }
+
+    public int getXPosition() {
+        return x;
+    }
+
+    public int[] getXPoints() {
+        return xPoints;
+    }
+
+    public int[] getYPoints() {
+        return yPoints;
+    }
+
+    private void calculateVertexPoints() {
+        xPoints = new int[6];
+        yPoints = new int[6];
+        for (int i = 0; i < 6; i++) {
+            double angle = Math.toRadians(30 + 60 * i); // Start at 30 degrees for flat-top hexagon
+            xPoints[i] = (int) (x + radius * Math.cos(angle));
+            yPoints[i] = (int) (y + radius * Math.sin(angle));
+        }
     }
 
     public void draw(Graphics2D g) {
