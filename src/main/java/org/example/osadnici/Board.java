@@ -215,7 +215,7 @@ public class Board {
     private void createBuildSites() {
         buildings = new ArrayList<>();
         for (int i = 0; i <= 54; i++) {
-            buildings.add(new Building(null, null));
+            buildings.add(new Building(null, null)); // TODO return to null and null
         }
     }
 

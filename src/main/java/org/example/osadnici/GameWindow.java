@@ -13,7 +13,7 @@ public class GameWindow extends JFrame {
     private JPanel controlPanel;
     private Game game;
     private JTextArea playerInfoTextArea;
-
+    private JLabel messageLabel;
 
     public GameWindow(Game game) {
         this.game = game; // Initialize game logic
@@ -21,7 +21,11 @@ public class GameWindow extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
-        boardPanel = new BoardPanel();
+        messageLabel = new JLabel("");
+        messageLabel.setBounds(20, 20, 300, 30); // Adjust position and size as needed
+        messageLabel.setForeground(Color.RED); // Set the color of the message text
+        add(messageLabel); // Add the label to the panel
+
         playerInfoPanel = new JPanel();
         controlPanel = new JPanel();
 
@@ -37,9 +41,19 @@ public class GameWindow extends JFrame {
 
         controlPanel.setPreferredSize(new Dimension(800, 100));
         controlPanel.setBackground(Color.DARK_GRAY);
-        JButton buildButton = new JButton("Build");
+
+
+        boardPanel = new BoardPanel(game, playerInfoTextArea, messageLabel);
+
+
+
         JButton exitButton = new JButton("Exit Game");
         JButton switchButton = new JButton("Switch Players");
+
+
+        JButton buyRoadButton = new JButton("Buy Road");
+        JButton buyVillageButton = new JButton("Buy Village");
+        JButton buyTownButton = new JButton("Buy Town");
 
         JButton sellLambButton = new JButton("Sell Lamb");
         JButton sellWheatButton = new JButton("Sell Wheat");
@@ -47,7 +61,6 @@ public class GameWindow extends JFrame {
         JButton sellStoneButton = new JButton("Sell Stone");
         JButton sellBrickButton = new JButton("Sell Brick");
 
-        // Add action listener to exit button
         exitButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -57,14 +70,57 @@ public class GameWindow extends JFrame {
         switchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                game.processCommand("switch");
-                updatePlayerInfo();
+                if (game.currentAction == Action.EndTurn){
+                    if (game.currentPlayerNum + 1 != game.getPlayersNum()) {
+                        game.currentAction = Action.FirstVillage;
+                    }
+                    else{
+                        game.currentAction = Action.RegularTurn;
+                    }
+                    game.switchPlayers();
+                }
+                else if (game.currentAction == Action.RegularTurn){
+                    game.switchPlayers();
+                }
+                Text.updatePlayerInfo(game, playerInfoTextArea);
+            }
+        });
+        buyRoadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (game.getCurrentPlayer().buyRoad()){
+                    game.currentAction = Action.BuildRoad;
+                }
+                Text.updatePlayerInfo(game, playerInfoTextArea);
+
+            }
+        });
+        buyVillageButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (game.getCurrentPlayer().buyVillage()){
+                    game.currentAction = Action.BuildVillage;
+                }
+                Text.updatePlayerInfo(game, playerInfoTextArea);
+            }
+        });
+        buyTownButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (game.getCurrentPlayer().buyTown()){
+                    game.currentAction = Action.BuildTown;
+                }
+                Text.updatePlayerInfo(game, playerInfoTextArea);
             }
         });
 
         controlPanel.add(exitButton);
-        controlPanel.add(buildButton);
         controlPanel.add(switchButton);
+
+        controlPanel.add(buyRoadButton);
+        controlPanel.add(buyVillageButton);
+        controlPanel.add(buyTownButton);
+
         controlPanel.add(sellBrickButton);
         controlPanel.add(sellLambButton);
         controlPanel.add(sellWoodButton);
@@ -76,7 +132,7 @@ public class GameWindow extends JFrame {
         add(controlPanel, BorderLayout.SOUTH);
 
         setFullscreen();
-        updatePlayerInfo();
+        Text.updatePlayerInfo(game, playerInfoTextArea);
     }
 
     private void setFullscreen() {
@@ -88,25 +144,7 @@ public class GameWindow extends JFrame {
             setExtendedState(JFrame.MAXIMIZED_BOTH);
         }
     }
-    // Method to update player information
-    private void updatePlayerInfo() {
-        Player currentPlayer = game.getCurrentPlayer(); // Get current player from game logic
-        StringBuilder info = new StringBuilder("Player Information:\n");
-        info.append("Player ").append(currentPlayer.getUniqueIndex() + 1).append("\n");
-        info.append("Points: ").append(currentPlayer.getPoints()).append("\n");
-        info.append("Resources:\n");
 
-        for (Map.Entry<Material, MaterialCards> entry : currentPlayer.getCardsList().entrySet()) {
-            info.append(entry.getKey()).append(": ").append(entry.getValue().numberOfCards).append("\n");
-        }
-
-        info.append("Pawns:\n");
-        for (Map.Entry<PawnType, PawnSet> entry : currentPlayer.getPawnList().entrySet()) {
-            info.append(entry.getKey()).append(": ").append(entry.getValue().numberOfPawns).append("\n");
-        }
-
-        playerInfoTextArea.setText(info.toString());
-    }
 
     public static void display(Game game) {
         SwingUtilities.invokeLater(() -> new GameWindow(game));

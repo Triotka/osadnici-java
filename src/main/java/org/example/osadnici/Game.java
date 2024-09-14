@@ -8,12 +8,14 @@ import java.util.List;
  * It manages the board, players, dice rolls, and game flow.
  */
 public class Game {
+
+    public Action currentAction = Action.FirstVillage;
     /** The game board. */
     private Board board;
     /** The number that triggers the special consequences when rolled. */
     private final int unluckyNumber = 7;
     /** The index of the current player. */
-    private int currentPlayerNum;
+    public int currentPlayerNum;
     /** The list of players in the game. */
     private List<Player> players;
     /** The user interface for interacting with the game. */
@@ -25,18 +27,18 @@ public class Game {
      * Starts the first round of the game.
      * Each player places their initial villages and roads.
      */
-    private void startFirstRound() {
-        var currentPlayer = players.get(currentPlayerNum);
-        currentPlayer.startVillage(UI, board);
-        currentPlayer.startRoad(UI, board);
-        currentPlayer.startVillage(UI, board);
-        currentPlayer.startRoad(UI, board);
-        if (currentPlayerNum + 1 == players.size()) {
-            return;
-        }
-        switchPlayers();
-        startFirstRound();
-    }
+//    private void startFirstRound() {
+//        var currentPlayer = players.get(currentPlayerNum);
+//        currentPlayer.startVillage(UI, board);
+//        currentPlayer.startRoad(UI, board);
+//        currentPlayer.startVillage(UI, board);
+//        currentPlayer.startRoad(UI, board);
+//        if (currentPlayerNum + 1 == players.size()) {
+//            return;
+//        }
+//        switchPlayers();
+//        startFirstRound();
+//    }
 
     /**
      * Handles the consequences when the unlucky number is rolled.
@@ -120,6 +122,10 @@ public class Game {
         }
     }
 
+
+    public Board GetBoard(){
+        return board;
+    }
     /**
      * Initiates the game setup and starts the game loop.
      */
@@ -129,15 +135,15 @@ public class Game {
         setPlayers();
         board = new Board();
         // TODO
-//        startFirstRound();
+      //  startFirstRound();
 //        switchPlayers();
-//        startRegularTurn();
+//        startRegularTurn();\
     }
 
     /**
      * Switches to the next player in the turn order.
      */
-    private void switchPlayers() {
+    public void switchPlayers() {
         currentPlayerNum = (currentPlayerNum + 1) % players.size();
     }
 
@@ -162,5 +168,8 @@ public class Game {
 
     public Player getCurrentPlayer() {
         return players.get(currentPlayerNum);
+    }
+    public int getPlayersNum() {
+        return players.size();
     }
 }
