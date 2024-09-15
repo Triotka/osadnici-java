@@ -7,8 +7,6 @@ import java.awt.event.ActionListener;
 public class PickPlayerWindow extends JFrame {
     public PickPlayerWindow (Game game) {
 
-        setLayout(new GridLayout(4, 1));
-
         JButton twoButton = new JButton("2 Players");
         JButton threeButton = new JButton("3 Players");
         JButton fourButton = new JButton("4 Players");
@@ -26,21 +24,21 @@ public class PickPlayerWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 game.setPlayers(2);
-                SwingUtilities.invokeLater(() -> new GameWindow(game));
+                GameWindow.display(game);
             }
         });
         threeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 game.setPlayers(3);
-                SwingUtilities.invokeLater(() -> new GameWindow(game));
+                GameWindow.display(game);
             }
         });
         fourButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 game.setPlayers(4);
-                SwingUtilities.invokeLater(() -> new GameWindow(game));
+                GameWindow.display(game);
             }
         });
 
@@ -50,6 +48,7 @@ public class PickPlayerWindow extends JFrame {
         add(cancelButton);
 
         setFullscreen();
+        setLayout(new GridLayout(4, 1));
         setVisible(true);
     }
     private void setFullscreen() {

@@ -9,7 +9,6 @@ import java.util.Map;
 
 public class BoardPanel extends JPanel {
 
-    private List<Color> playerColors = List.of(Color.YELLOW, Color.WHITE, Color.RED, Color.BLUE );
     private Integer selectedRoadStart = null;
     private List<HexTile> tiles;
     Point[ ] vertices;
@@ -29,6 +28,7 @@ public class BoardPanel extends JPanel {
         this.messageLabel = messageLabel;
         createHexagonalBoard();
         createButtons();
+        GenericWindow.changeBackground(this);
     }
 
     private void createHexagonalBoard() {
@@ -234,7 +234,7 @@ public class BoardPanel extends JPanel {
                         messageLabel.setText("Building failed! Try a different location.");
                     }
 
-                    Text.updatePlayerInfo(game, playerInfoTextArea);
+                    GenericWindow.updatePlayerInfo(game, playerInfoTextArea);
                     updateBoard();
 
                 }
@@ -251,13 +251,13 @@ public class BoardPanel extends JPanel {
     private void drawVillage(Graphics2D g2d, Integer owner, int index){
         int length = 40; // TODO adjust
         var position = vertices[index];
-        var color = playerColors.get(owner); // TODO check if valid
+        var color = GenericWindow.playerColors.get(owner); // TODO check if valid
         drawSquare(g2d, position.x, position.y, length, color);
     }
     private void drawTown(Graphics2D g2d, Integer owner, int index){
         int radius = 40; // TODO adjust
         var position = vertices[index];
-        var color = playerColors.get(owner); // TODO check if valid
+        var color = GenericWindow.playerColors.get(owner); // TODO check if valid
         drawCircle(g2d, position.x, position.y, radius, color);
     }
     private void drawBuildings(Graphics2D g2d){
@@ -312,7 +312,7 @@ public class BoardPanel extends JPanel {
                 var endPos = vertices[endNode];     // Map node to screen coordinates
 
                 // Choose color based on the road's owner (player)
-                Color color = (playerColors.get(road.owner));
+                Color color = (GenericWindow.playerColors.get(road.owner));
 
                 // Draw the road as a line between the two positions
                 drawThickLine(g, startPos.x, startPos.y, endPos.x, endPos.y, 10, color);

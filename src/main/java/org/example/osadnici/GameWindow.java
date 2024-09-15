@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Map;
 
 public class GameWindow extends JFrame {
 
@@ -16,10 +15,11 @@ public class GameWindow extends JFrame {
     private JLabel messageLabel;
 
     public GameWindow(Game game) {
-        this.game = game; // Initialize game logic
+        this.game = game;
         setTitle("Settlers of Catan");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+        GenericWindow.changeBackground(this);
 
         messageLabel = new JLabel("");
         messageLabel.setBounds(20, 20, 300, 30); // Adjust position and size as needed
@@ -82,7 +82,7 @@ public class GameWindow extends JFrame {
                 else if (game.currentAction == Action.RegularTurn){
                     game.switchPlayers();
                 }
-                Text.updatePlayerInfo(game, playerInfoTextArea);
+                GenericWindow.updatePlayerInfo(game, playerInfoTextArea);
             }
         });
         buyRoadButton.addActionListener(new ActionListener() {
@@ -91,7 +91,7 @@ public class GameWindow extends JFrame {
                 if (game.getCurrentPlayer().buyRoad()){
                     game.currentAction = Action.BuildRoad;
                 }
-                Text.updatePlayerInfo(game, playerInfoTextArea);
+                GenericWindow.updatePlayerInfo(game, playerInfoTextArea);
 
             }
         });
@@ -101,7 +101,7 @@ public class GameWindow extends JFrame {
                 if (game.getCurrentPlayer().buyVillage()){
                     game.currentAction = Action.BuildVillage;
                 }
-                Text.updatePlayerInfo(game, playerInfoTextArea);
+                GenericWindow.updatePlayerInfo(game, playerInfoTextArea);
             }
         });
         buyTownButton.addActionListener(new ActionListener() {
@@ -110,7 +110,7 @@ public class GameWindow extends JFrame {
                 if (game.getCurrentPlayer().buyTown()){
                     game.currentAction = Action.BuildTown;
                 }
-                Text.updatePlayerInfo(game, playerInfoTextArea);
+                GenericWindow.updatePlayerInfo(game, playerInfoTextArea);
             }
         });
 
@@ -132,7 +132,7 @@ public class GameWindow extends JFrame {
         add(controlPanel, BorderLayout.SOUTH);
 
         setFullscreen();
-        Text.updatePlayerInfo(game, playerInfoTextArea);
+        GenericWindow.updatePlayerInfo(game, playerInfoTextArea);
     }
 
     private void setFullscreen() {
@@ -147,6 +147,7 @@ public class GameWindow extends JFrame {
 
 
     public static void display(Game game) {
-        SwingUtilities.invokeLater(() -> new GameWindow(game));
+      SwingUtilities.invokeLater(() -> new GameWindow(game));
+
     }
 }
