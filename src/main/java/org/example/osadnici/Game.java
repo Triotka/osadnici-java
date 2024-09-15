@@ -132,7 +132,7 @@ public class Game {
     public void play() {
         dice = new Dice();
        // UI = new UserInterface();
-        setPlayers();
+        //setPlayers();
         board = new Board();
         // TODO
       //  startFirstRound();
@@ -151,16 +151,16 @@ public class Game {
      * Sets up the players for the game.
      * Prompts the user to choose the number of players and initializes them.
      */
-    private void setPlayers() {
+    public void setPlayers(int numberOfPlayers) {
         this.players = new ArrayList<>();
-        int numberOfPlayers = 4; // TODO UI.choseplayers alternative
+        //int numberOfPlayers = 4; // TODO UI.choseplayers alternative
         // valid range of players
-        int minimumPlayers = 2;
-        int maximumPlayers = 4;
-        while (numberOfPlayers < minimumPlayers || numberOfPlayers > maximumPlayers) {
+     //   int minimumPlayers = 2;
+       // int maximumPlayers = 4;
+       // while (numberOfPlayers < minimumPlayers || numberOfPlayers > maximumPlayers) {
 //           TODO UI.printInvalidNumPlayers(); alternative
-            numberOfPlayers = 4; // TODO UI.choseplayers alternative
-        }
+           // numberOfPlayers = 4; // TODO UI.choseplayers alternative
+       // }
         for (int playerIndex = 0; playerIndex < numberOfPlayers; playerIndex++) {
             players.add(new Player(playerIndex));
         }
