@@ -42,7 +42,10 @@ public class Player {
     private void initCards() {
         cardsList = new HashMap<>();
         for (var material : Material.values()) {
-            cardsList.put(material, new MaterialCards());
+            if (material != Material.Desert){
+                cardsList.put(material, new MaterialCards());
+            }
+
         }
     }
 
@@ -494,7 +497,9 @@ public class Player {
      */
     public void giveStartCards() {
         for (var material : Material.values()) {
-            cardsList.get(material).numberOfCards = 1;
+            if (material != Material.Desert) {
+                cardsList.get(material).numberOfCards = 1;
+            }
         }
     }
 

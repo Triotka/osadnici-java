@@ -71,6 +71,7 @@ public class UserInterface {
             case Material.Sheep -> ColorAnsi.PURPLE;
             case Material.Wheat -> ColorAnsi.YELLOW;
             case Material.Stone -> ColorAnsi.BLUE;
+            case Material.Desert -> ColorAnsi.BLACK;
         };
     }
     /**

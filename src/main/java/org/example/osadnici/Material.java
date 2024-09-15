@@ -8,5 +8,6 @@ public enum Material {
     Wood,
     Sheep,
     Wheat,
-    Stone
+    Stone,
+    Desert
 }

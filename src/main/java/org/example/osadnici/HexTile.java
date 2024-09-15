@@ -8,12 +8,12 @@ public class HexTile {
     private final int radius;
     private final int x;
     private final int y;
-    private final String resourceType;
+    private final Material resourceType;
     private final int number;
     private int[] xPoints;
     private int[] yPoints;
 
-    public HexTile(int x, int y, int radius, String resourceType, int number) {
+    public HexTile(int x, int y, int radius, Material resourceType, int number) {
         this.x = x;
         this.y = y;
         this.radius = radius;
@@ -55,22 +55,22 @@ public class HexTile {
 
         // Fill hexagon based on resource type
         switch (resourceType) {
-            case "Forest":
+            case Material.Wood:
                 g.setColor(new Color(34, 139, 34)); // Forest Green
                 break;
-            case "Mountain":
+            case Material.Stone:
                 g.setColor(new Color(169, 169, 169)); // Grey for mountains
                 break;
-            case "Field":
+            case Material.Wheat:
                 g.setColor(new Color(255, 215, 0)); // Yellow for fields
                 break;
-            case "Pasture":
+            case Material.Sheep:
                 g.setColor(new Color(144, 238, 144)); // Light green for pasture
                 break;
-            case "Hill":
+            case Material.Brick:
                 g.setColor(new Color(205, 92, 92)); // Red for hills
                 break;
-            case "Desert":
+            case Material.Desert:
                 g.setColor(new Color(210, 180, 140)); // Tan for desert
                 break;
             default:

@@ -157,7 +157,7 @@ public class Board {
     private void createTiles() {
         Material[] materials = {Material.Brick, Material.Wheat, Material.Stone,
                 Material.Wood, Material.Sheep, Material.Brick, Material.Wheat,
-                Material.Wood, Material.Stone, null, Material.Sheep, Material.Wood,
+                Material.Wood, Material.Stone, Material.Desert, Material.Sheep, Material.Wood,
                 Material.Sheep, Material.Wood, Material.Wheat, Material.Stone,
                 Material.Brick, Material.Sheep, Material.Wheat};
         int[] numbers = {11, 12, 9, 4, 3, 6, 10, 8, 11, 7, 5, 8, 10, 9, 4, 3, 5, 2, 6};

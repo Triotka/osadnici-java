@@ -36,8 +36,10 @@ public class BoardPanel extends JPanel {
         int startX = 350;
         int startY = 100;
 
-        String[] resourceTypes = {"Forest", "Mountain", "Field", "Pasture", "Hill", "Desert"};
-        int[] numbers = {5, 8, 3, 6, 9, 11, 4, 10, 12, 2, 8, 5, 6, 9, 3, 4, 10};
+
+        var gameTiles = game.GetBoard().tilesList;
+       // String[] resourceTypes = {"Forest", "Mountain", "Field", "Pasture", "Hill", "Desert"};
+       // int[] numbers = {5, 8, 3, 6, 9, 11, 4, 10, 12, 2, 8, 5, 6, 9, 3, 4, 10};
 
         int[][] layout = {
                 {0, 1, 1, 1, 0},
@@ -66,8 +68,9 @@ public class BoardPanel extends JPanel {
                     if (row % 2 != 0) {
                         xOffset += radius * 0.85;
                     }
-                    String resourceType = resourceTypes[tileCounter % resourceTypes.length];
-                    int number = numbers[tileCounter % numbers.length];
+                    var currentTile = gameTiles.get(tileCounter);
+                    var resourceType = currentTile.material();
+                    int number = currentTile.number();
 
                     tiles.add(new HexTile(xOffset, yOffset, radius, resourceType, number));
                     tileCounter++;

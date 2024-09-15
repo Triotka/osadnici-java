@@ -13,10 +13,10 @@ public class GenericWindow {
         // TODO if T is JFrame set its background and if T is JPanel set its background to gray
         if (component instanceof JFrame) {
             JFrame frame = (JFrame) component;
-            frame.getContentPane().setBackground(Color.DARK_GRAY); // Change JFrame background color to blue
+            frame.getContentPane().setBackground(Color.DARK_GRAY);
         } else if (component instanceof JPanel) {
             JPanel panel = (JPanel) component;
-            panel.setBackground(Color.PINK); // Change JPanel background color to gray
+            panel.setBackground(new Color(100, 160, 255));
         } else {
             throw new IllegalArgumentException("Unsupported component type");
         }
