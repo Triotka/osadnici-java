@@ -1,4 +1,5 @@
 package org.example.osadnici;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,23 +8,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The `BoardPanel` a component for rendering the game board.
+ * It handles the layout and rendering of hexagonal tiles, vertices, buttons, and player buildings and roads.
+ */
 public class BoardPanel extends JPanel {
 
     private Integer selectedRoadStart = null;
-    private List<HexTile> tiles;
-    Point[ ] vertices;
-    private List<JButton> buttons;
-    private Game game;
-    private JTextArea playerInfoTextArea;
-    private JLabel messageLabel;
+    private final List<HexTile> tiles;
+    Point[] vertices;
+    private final List<JButton> buttons;
 
-    public BoardPanel(Game game, JTextArea playerInfo, JLabel messageLabel) {
+    private final JFrame currentWindow;
+    private final Game game;
+    private final JTextArea playerInfoTextArea;
+    private final JLabel messageLabel;
+
+    /**
+     * Constructor for the BoardPanel. Initializes various components and sets up the game board.
+     *
+     * @param game            The current game instance.
+     * @param playerInfo      The JTextArea to display player information.
+     * @param messageLabel    The JLabel to display messages.
+     * @param window          The JFrame current window
+     */
+    public BoardPanel(Game game, JTextArea playerInfo, JLabel messageLabel, JFrame window) {
         this.game = game;
-        setPreferredSize(new Dimension(800, 600));
+        setPreferredSize(new Dimension((int) (getWidth() / 1.5), (int) (600 / 1.2)));
         setBackground(Color.WHITE);
         tiles = new ArrayList<>();
         vertices = new Point[55];
         buttons = new ArrayList<>();
+        currentWindow = window;
         this.playerInfoTextArea = playerInfo;
         this.messageLabel = messageLabel;
         createHexagonalBoard();
@@ -31,15 +47,15 @@ public class BoardPanel extends JPanel {
         GenericWindow.changeBackground(this);
     }
 
+    /**
+     * Creates a hexagonal board layout and initializes the tiles based on the game configuration.
+     */
     private void createHexagonalBoard() {
         int radius = 70;
         int startX = 350;
         int startY = 100;
 
-
-        var gameTiles = game.GetBoard().tilesList;
-       // String[] resourceTypes = {"Forest", "Mountain", "Field", "Pasture", "Hill", "Desert"};
-       // int[] numbers = {5, 8, 3, 6, 9, 11, 4, 10, 12, 2, 8, 5, 6, 9, 3, 4, 10};
+        var gameTiles = game.getBoard().tilesList;
 
         int[][] layout = {
                 {0, 1, 1, 1, 0},
@@ -49,22 +65,16 @@ public class BoardPanel extends JPanel {
                 {0, 1, 1, 1, 0}
         };
 
-
         double hexHorizontalSpacing = 1.7 * radius;
-
         double hexVerticalSpacing = 1.5 * radius;
-
         int tileCounter = 0;
-
 
         for (int row = 0; row < layout.length; row++) {
             for (int col = 0; col < layout[row].length; col++) {
                 if (layout[row][col] == 1) {
-                    // Calculate the X and Y positions
                     int xOffset = startX + (int) (col * hexHorizontalSpacing);
                     int yOffset = startY + (int) (row * hexVerticalSpacing);
 
-                    // Offset odd rows by half a hexagon's width
                     if (row % 2 != 0) {
                         xOffset += radius * 0.85;
                     }
@@ -81,13 +91,23 @@ public class BoardPanel extends JPanel {
         setVertices();
     }
 
-    private void setVertex(int buildIndex, int tileNumber, int pointNumber){
-
+    /**
+     * Sets vertices positions for the game board.
+     *
+     * @param buildIndex The index to set in the vertices array.
+     * @param tileNumber The index of the tile in the tiles list.
+     * @param pointNumber The index of the point in the tile's points array.
+     */
+    private void setVertex(int buildIndex, int tileNumber, int pointNumber) {
         int xPos = tiles.get(tileNumber).getXPoints()[pointNumber];
         int yPos = tiles.get(tileNumber).getYPoints()[pointNumber];
         vertices[buildIndex] = new Point(xPos, yPos);
     }
-    private void setVertices(){
+
+    /**
+     * Initializes the vertices for the game board based on the layout.
+     */
+    private void setVertices() {
         vertices[0] = null;
 
         setVertex(1, 0, 3);
@@ -145,12 +165,15 @@ public class BoardPanel extends JPanel {
         setVertex(53, 7, 2);
         setVertex(54, 12, 2);
     }
+
+    /**
+     * Creates buttons for the user to interact with the game board.
+     */
     private void createButtons() {
         setLayout(null);
         int buttonSize = 20; //TODO auto
 
         for (int i = 1; i < vertices.length; i++) {
-
             JButton button = new JButton(String.valueOf(i));
             button.setBounds(vertices[i].x - buttonSize / 2, vertices[i].y - buttonSize / 2, buttonSize, buttonSize);
 
@@ -160,121 +183,140 @@ public class BoardPanel extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                     boolean actionSuccessful = false;
 
-                    if (game.currentAction == Action.BuildTown){
-                       actionSuccessful =  game.getCurrentPlayer().buildTown(index, game.GetBoard());
-
+                    if (game.currentAction == Action.BuildTown) {
+                        actionSuccessful = game.getCurrentPlayer().buildTown(index, game.getBoard());
                         if (actionSuccessful) {
                             game.currentAction = Action.RegularTurn;
                         }
-                    }
-                    else if (game.currentAction == Action.BuildVillage){
-                        actionSuccessful = game.getCurrentPlayer().buildVillage(index, game.GetBoard());
+                    } else if (game.currentAction == Action.BuildVillage) {
+                        actionSuccessful = game.getCurrentPlayer().buildVillage(index, game.getBoard());
                         if (actionSuccessful) {
                             game.currentAction = Action.RegularTurn;
                         }
-                    }
-                    else if (game.currentAction == Action.BuildRoad){
-                        if (selectedRoadStart != null){
+                    } else if (game.currentAction == Action.BuildRoad) {
+                        if (selectedRoadStart != null) {
                             var pos = new Position(selectedRoadStart, index);
-                            actionSuccessful = game.getCurrentPlayer().buildRoad(pos, game.GetBoard());
+                            actionSuccessful = game.getCurrentPlayer().buildRoad(pos, game.getBoard());
                             selectedRoadStart = null;
                             if (actionSuccessful) {
                                 game.currentAction = Action.RegularTurn;
                             }
-                        }
-                        else{
+                        } else {
                             selectedRoadStart = index;
                             actionSuccessful = true;
                         }
-
-                    }
-
-                    else if (game.currentAction == Action.FirstVillage){
-                        actionSuccessful = game.getCurrentPlayer().startVillage(index, game.GetBoard());
-
+                    } else if (game.currentAction == Action.FirstVillage) {
+                        actionSuccessful = game.getCurrentPlayer().startVillage(index, game.getBoard());
                         if (actionSuccessful) {
                             game.currentAction = Action.FirstRoad;
                         }
-                    }
-                    else if (game.currentAction == Action.SecondVillage){
-                        actionSuccessful = game.getCurrentPlayer().startVillage(index, game.GetBoard());
+                    } else if (game.currentAction == Action.SecondVillage) {
+                        actionSuccessful = game.getCurrentPlayer().startVillage(index, game.getBoard());
                         if (actionSuccessful) {
                             game.currentAction = Action.SecondRoad;
                         }
-                    }
-                    else if (game.currentAction == Action.FirstRoad){
-                        if (selectedRoadStart != null){
+                    } else if (game.currentAction == Action.FirstRoad) {
+                        if (selectedRoadStart != null) {
                             var pos = new Position(selectedRoadStart, index);
-                            actionSuccessful = game.getCurrentPlayer().startRoad(pos, game.GetBoard());
+                            actionSuccessful = game.getCurrentPlayer().startRoad(pos, game.getBoard());
                             selectedRoadStart = null;
                             if (actionSuccessful) {
                                 game.currentAction = Action.SecondVillage;
                             }
-                        }
-                        else{
+                        } else {
                             selectedRoadStart = index;
                             actionSuccessful = true;
                         }
-                    }
-                    else if (game.currentAction == Action.SecondRoad){
-                        if (selectedRoadStart != null){
+                    } else if (game.currentAction == Action.SecondRoad) {
+                        if (selectedRoadStart != null) {
                             var pos = new Position(selectedRoadStart, index);
-                           actionSuccessful = game.getCurrentPlayer().startRoad(pos, game.GetBoard());
+                            actionSuccessful = game.getCurrentPlayer().startRoad(pos, game.getBoard());
                             selectedRoadStart = null;
                             if (actionSuccessful) {
                                 game.currentAction = Action.EndTurn;
                             }
-                        }
-                        else{
+                        } else {
                             selectedRoadStart = index;
                             actionSuccessful = true;
                         }
                     }
+
+                    updateBoard();
+                    if (game.getCurrentPlayer().evaluateWinner()){
+                        WinnerWindow.display(game);
+                        currentWindow.dispose();
+                    }
+
+                    GenericWindow.updatePlayerInfo(game, playerInfoTextArea);
 
                     if (actionSuccessful) {
                         messageLabel.setText("Building successful!");
                     } else {
                         messageLabel.setText("Building failed! Try a different location.");
                     }
-
-                    GenericWindow.updatePlayerInfo(game, playerInfoTextArea);
-                    updateBoard();
-
                 }
             });
             buttons.add(button);
             add(button);
         }
     }
-    private void updateBoard() {;
+
+    /**
+     * Updates and repaints the board.
+     */
+    private void updateBoard() {
         repaint();
     }
 
-
-    private void drawVillage(Graphics2D g2d, Integer owner, int index){
-        int length = 40; // TODO adjust
+    /**
+     * Draws a village on the board.
+     *
+     * @param g2d    The Graphics2D object used for drawing.
+     * @param owner  The owner of the village.
+     * @param index  The index of the vertex where the village is drawn.
+     */
+    private void drawVillage(Graphics2D g2d, Integer owner, int index) {
+        int length = getHeight() / 18;
         var position = vertices[index];
-        var color = GenericWindow.playerColors.get(owner); // TODO check if valid
+        var color = GenericWindow.playerColors.get(owner);
         drawSquare(g2d, position.x, position.y, length, color);
     }
-    private void drawTown(Graphics2D g2d, Integer owner, int index){
-        int radius = 40; // TODO adjust
+
+    /**
+     * Draws a town on the board.
+     *
+     * @param g2d    The Graphics2D object used for drawing.
+     * @param owner  The owner of the town.
+     * @param index  The index of the vertex where the town is drawn.
+     */
+    private void drawTown(Graphics2D g2d, Integer owner, int index) {
+        int radius = getHeight() / 18;
         var position = vertices[index];
-        var color = GenericWindow.playerColors.get(owner); // TODO check if valid
+        var color = GenericWindow.playerColors.get(owner);
         drawCircle(g2d, position.x, position.y, radius, color);
     }
-    private void drawBuildings(Graphics2D g2d){
+
+    /**
+     * Draws all buildings (villages and towns) on the board.
+     *
+     * @param g2d The Graphics2D object used for drawing.
+     */
+    private void drawBuildings(Graphics2D g2d) {
         for (int i = 1; i < vertices.length; i++) {
-            var buildSpot = game.GetBoard().buildings.get(i);
-            if (buildSpot.type == PawnType.Village) // TODO check off by one error
-            {
+            var buildSpot = game.getBoard().buildings.get(i);
+            if (buildSpot.type == PawnType.Village) {
                 drawVillage(g2d, buildSpot.owner, i);
-            }
-            else if (buildSpot.type == PawnType.Town){
+            } else if (buildSpot.type == PawnType.Town) {
                 drawTown(g2d, buildSpot.owner, i);
             }
         }
     }
+
+    /**
+     * Paints the component, including the hexagonal tiles and buildings.
+     *
+     * @param g The Graphics object used for drawing.
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -283,52 +325,42 @@ public class BoardPanel extends JPanel {
         for (HexTile tile : tiles) {
             tile.draw(g2d);
         }
-//        if (!tiles.isEmpty()) {
-//            HexTile firstTile = tiles.get(0); // Get the first hex tile
-//            drawCircle(g2d, firstTile.getXPosition(), firstTile.getYPosition(), 30); // Draw circle at hexagon's center
-//             }
-
         drawBuildings(g2d);
         drawRoads(g2d);
-
     }
-
 
     /**
      * Draws the roads on the board using the Graphics object.
      * Each road is drawn as a line between its start and end node positions.
+     *
      * @param g the Graphics object used for drawing
      */
     public void drawRoads(Graphics2D g) {
-        // Iterate over all the roads in the board's 'roads' HashMap
-        for (Map.Entry<Integer, List<Road>> entry : game.GetBoard().roads.entrySet()) {
+        for (Map.Entry<Integer, List<Road>> entry : game.getBoard().roads.entrySet()) {
             int startNode = entry.getKey();
             List<Road> roadList = entry.getValue();
 
-            // Iterate over each road that starts at the current node
             for (Road road : roadList) {
                 int endNode = road.endPosition;
 
-                // Example: draw the road as a line between start and end positions
-                // You can map startNode and endNode to coordinates on the board
-                var startPos = vertices[startNode]; // Map node to screen coordinates
-                var endPos = vertices[endNode];     // Map node to screen coordinates
+                var startPos = vertices[startNode];
+                var endPos = vertices[endNode];
 
-                // Choose color based on the road's owner (player)
                 Color color = (GenericWindow.playerColors.get(road.owner));
 
-                // Draw the road as a line between the two positions
-                drawThickLine(g, startPos.x, startPos.y, endPos.x, endPos.y, 10, color);
+                drawThickLine(g, startPos.x, startPos.y, endPos.x, endPos.y, (float) getHeight() / 40, color);
             }
         }
     }
+
     /**
      * Draws a circle at the specified (x, y) position with the given radius.
      *
-     * @param g Graphics2D object
-     * @param x Center X coordinate of the circle
-     * @param y Center Y coordinate of the circle
+     * @param g      Graphics2D object
+     * @param x      Center X coordinate of the circle
+     * @param y      Center Y coordinate of the circle
      * @param radius Radius of the circle
+     * @param color  The color to fill the circle
      */
     private void drawCircle(Graphics2D g, int x, int y, int radius, Color color) {
         g.setColor(color);
@@ -336,16 +368,17 @@ public class BoardPanel extends JPanel {
         int topLeftX = x - radius;
         int topLeftY = y - radius;
         g.drawOval(topLeftX, topLeftY, 2 * radius, 2 * radius);
-         g.fillOval(topLeftX, topLeftY, 2 * radius, 2 * radius);
+        g.fillOval(topLeftX, topLeftY, 2 * radius, 2 * radius);
     }
 
     /**
      * Draws a square at the specified (x, y) position with the given side length.
      *
-     * @param g Graphics2D object
-     * @param x Center X coordinate of the square
-     * @param y Center Y coordinate of the square
-     * @param sideLength Length of each side of the square
+     * @param g           Graphics2D object
+     * @param x           Center X coordinate of the square
+     * @param y           Center Y coordinate of the square
+     * @param sideLength  Length of each side of the square
+     * @param color       The color to fill the square
      */
     private void drawSquare(Graphics2D g, int x, int y, int sideLength, Color color) {
         g.setColor(color);
@@ -359,12 +392,13 @@ public class BoardPanel extends JPanel {
     /**
      * Draws a thick line between two points (x1, y1) and (x2, y2).
      *
-     * @param g Graphics2D object
-     * @param x1 Starting X coordinate
-     * @param y1 Starting Y coordinate
-     * @param x2 Ending X coordinate
-     * @param y2 Ending Y coordinate
+     * @param g         Graphics2D object
+     * @param x1        Starting X coordinate
+     * @param y1        Starting Y coordinate
+     * @param x2        Ending X coordinate
+     * @param y2        Ending Y coordinate
      * @param thickness The thickness of the line
+     * @param color     The color of the line
      */
     private void drawThickLine(Graphics2D g, int x1, int y1, int x2, int y2, float thickness, Color color) {
         g.setColor(color);

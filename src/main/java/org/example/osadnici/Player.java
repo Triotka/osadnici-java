@@ -1,8 +1,6 @@
 package org.example.osadnici;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Represents a player in the game.
@@ -289,57 +287,41 @@ public class Player {
     }
 
     /**
-     * Evaluates if the player has won the game and if so, calls UI method to print winner
+     * Evaluates if the player has won the game and returns result
+     * @return true if the player has won otherwise false
      *
-     * @param UI the user interface
      */
-    private void evaluateWinner(UserInterface UI) {
-        if (points == 10) {
-            UI.printWinner();
-        }
+    public boolean evaluateWinner() {
+        return points == 10;
     }
 
     /**
-     * Builds a town on the game board if possible and returns true if not returns false.
+     * Builds a town on the game board if possible and returns true. If not returns false.
      *
-     * //@param UI    the user interface
+     * @param buildPosition    the position on the board where to build a town
      * @param board the game board
+     * @return boolean to say if building was successful
      */
     public boolean buildTown(int buildPosition, Board board) {
-        //UI.displayBuildBoard(board);
-        //int buildPosition = UI.getBuildNumber("town");
-//        if (buildPosition == -1) { // exit command
-//            return;
-//        }
+
         if (!townPosValid(buildPosition, board)) {
-            //buildPosition = UI.getBuildNumber("town");
             return false;
         }
         board.createTown(buildPosition);
         pawnList.get(PawnType.Village).numberOfPawns++;
         pawnList.get(PawnType.Town).numberOfPawns--;
         points++;
-        //evaluateWinner(UI); // TODO dodelat
         return true;
     }
 
     /**
      * Builds a road on the game board.
-     *
-     //S* @param UI    the user interface
+     * @param position    the position on the board where to build a road with start and end
      * @param board the game board
+     * @return boolean to say if building was successful
      */
     public boolean buildRoad(Position position, Board board) {
-        //UI.displayBuildBoard(board);
-      //  var position = UI.getRoadNumbers();
-//        if (position.start == -1 || position.end == -1) { // exit command
-//            return;
-//        }
         if (!roadPosValid(position, board)) {
-//            position = UI.getRoadNumbers();
-//            if (position.start == -1 || position.end == -1) { // exit command
-//                return;
-//            }
             return false;
         }
         board.createRoad(position, uniqueIndex);
@@ -350,69 +332,21 @@ public class Player {
     /**
      * Builds a village on the game board if possible and returns true. If not returns false.
      *
-     //* @param UI    the user interface
+     * @param buildPosition    the position on the board where to build a village
      * @param board the game board
+     * @return boolean to say if building was successful
      */
     public boolean buildVillage(int buildPosition, Board board) {
-      //  UI.displayBuildBoard(board);
-      //  int buildPosition = UI.getBuildNumber("village");
-//        if (buildPosition == -1) { // exit command
-//            return;
-//        }
         if (!villagePosValid(buildPosition, board, false)) {
             return false;
-            //buildPosition = UI.getBuildNumber("village");
         }
         board.createVillage(buildPosition, uniqueIndex);
         pawnList.get(PawnType.Village).numberOfPawns--;
         points++;
-        //evaluateWinner(); // TODO vratit
         return true;
     }
 
-    /**
-     * Starts buying process and finds out what player wants to buy
-     *
-     * @param UI    the user interface
-     * @param board the game board
-     */
-    public void startBuy(UserInterface UI, Board board) {
-        String request = UI.getBuyRequest();
-//        switch (request) {
-//            case "stop":
-//                UI.unsuccessfulBuying();
-//                return;
-//            case "village":
-//                if (buyVillage()) {
-//                    UI.successfulBuying();
-//                    buildVillage(UI, board);
-//                } else {
-//                    UI.unsuccessfulBuying();
-//                }
-//                break;
-//            case "town":
-//                if (buyTown()) {
-//                    UI.successfulBuying();
-//                    buildTown(UI, board);
-//                } else {
-//                    UI.unsuccessfulBuying();
-//
-//                }
-//                break;
-//            case "road":
-//                if (buyRoad()) {
-//                    UI.successfulBuying();
-//                    buildRoad(UI, board);
-//                } else {
-//                    UI.unsuccessfulBuying();
-//                }
-//                break;
-//            default:
-//                UI.unsuccessfulBuying();
-//                startBuy(UI, board);
-//                break;
-        //}
-    }
+
 
     /**
      * Checks if player has at least one card of requested material
@@ -425,47 +359,27 @@ public class Player {
     }
 
     /**
-     * Starts selling process and finds out what player wants to sell, want to get and to whom and
+     * Proceeds a selling interaction between a buyer and a seller.
      *
-     * @param UI    the user interface
-     * @param players list of all players in the game
+     * @param receivedMaterial material to be received by currentPlayer
+     * @param soldMaterial material to be sold by currentPlayer
+     * @param buyer player with whom the interaction is happening
      */
-    public void startSell(UserInterface UI, List<Player> players) {
-        int buyerIndex = UI.getBuyerNumber(players.size());
-        if (buyerIndex < 0 || buyerIndex >= players.size()) {
-            UI.showInvalidSell();
-            return;
-        }
-        try {
-            var receivedMaterial = Material.valueOf(UI.getMaterial("receive"));
-            var soldMaterial = Material.valueOf(UI.getMaterial("sell"));
-            var buyer = players.get(buyerIndex);
-            if (!buyer.hasResources(receivedMaterial) || !this.hasResources(soldMaterial)) {
-                UI.showInvalidSell();
-            } else {
-                buyer.cardsList.get(soldMaterial).numberOfCards++;
-                buyer.cardsList.get(receivedMaterial).numberOfCards--;
-                this.cardsList.get(soldMaterial).numberOfCards--;
-                this.cardsList.get(receivedMaterial).numberOfCards++;
-                UI.showValidSell();
-
-            }
-        } catch (Exception e) {
-            UI.showInvalidSell();
-        }
+    public void sell(Material receivedMaterial, Material soldMaterial, Player buyer) {
+        buyer.cardsList.get(soldMaterial).numberOfCards++;
+        buyer.cardsList.get(receivedMaterial).numberOfCards--;
+        this.cardsList.get(soldMaterial).numberOfCards--;
+        this.cardsList.get(receivedMaterial).numberOfCards++;
     }
 
     /**
      * Builds a road on the game board as part of init building at the start of game.
      *
-    /// * @param UI          the user interface
      * @param board       the game board
+     * @return            boolean if building start road was successful or not
      */
     public boolean startRoad(Position roadPosition, Board board) {
-        // UI.displayBuildBoard(board);
-      //  Position roadPosition = UI.getRoadNumbers();
        if (!roadPosValid(roadPosition, board)) {
-//            roadPosition = UI.getRoadNumbers();
            return false;
       }
         board.createRoad(roadPosition, uniqueIndex);
@@ -476,18 +390,17 @@ public class Player {
     /**
      * Builds a village on the game board as part of init building at the start of game.
      *
-  //   * @param UI          the user interface
      * @param board       the game board
+     * @return            boolean if building start Village was successful or not
      */
     public boolean startVillage(int buildPosition, Board board) {
-       // UI.displayBuildBoard(board);
-       // int buildPosition = UI.getBuildNumber("village");
+
         if (!villagePosValid(buildPosition, board, true)) {
-          //  buildPosition = UI.getBuildNumber("village");
             return false;
         }
         board.createVillage(buildPosition, uniqueIndex);
         pawnList.get(PawnType.Village).numberOfPawns--;
+        points++;
         return true;
     }
 
@@ -537,21 +450,5 @@ public class Player {
      */
     public int getUniqueIndex() {
         return uniqueIndex;
-    }
-
-    /**
-     * Increments the player's points by 1.
-     */
-    public void incrementPoints() {
-        points++;
-    }
-
-    /**
-     * Decrements the specified pawn type by 1.
-     *
-     * @param type the pawn type to decrement
-     */
-    public void decrementPawn(PawnType type) {
-        pawnList.get(type).numberOfPawns--;
     }
 }

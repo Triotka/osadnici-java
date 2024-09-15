@@ -3,6 +3,9 @@ package org.example.osadnici;
 import java.awt.*;
 import java.awt.geom.Path2D;
 
+/**
+ * The class represents a UI hexagonal tile drawing used in the game.
+ */
 public class HexTile {
 
     private final int radius;
@@ -13,6 +16,15 @@ public class HexTile {
     private int[] xPoints;
     private int[] yPoints;
 
+    /**
+     * Constructs a HexTile object with a specified position, radius, resource type, and number.
+     *
+     * @param x            The x-coordinate of the center of the hexagon.
+     * @param y            The y-coordinate of the center of the hexagon.
+     * @param radius       The radius of the hexagon.
+     * @param resourceType The type of resource this hexagon provides.
+     * @param number       The number associated with this hexagon.
+     */
     public HexTile(int x, int y, int radius, Material resourceType, int number) {
         this.x = x;
         this.y = y;
@@ -20,26 +32,31 @@ public class HexTile {
         this.resourceType = resourceType;
         this.number = number;
 
-        // Calculate points immediately upon creation
+        // Calculate points immediately after creating
         calculateVertexPoints();
     }
 
-    public int getYPosition() {
-        return y;
-    }
-
-    public int getXPosition() {
-        return x;
-    }
-
+    /**
+     * Gets the x-coordinates of the vertices of the hexagon.
+     *
+     * @return An array of x-coordinates of the hexagon vertices.
+     */
     public int[] getXPoints() {
         return xPoints;
     }
 
+    /**
+     * Gets the y-coordinates of the vertices of the hexagon.
+     *
+     * @return An array of y-coordinates of the hexagon vertices.
+     */
     public int[] getYPoints() {
         return yPoints;
     }
 
+    /**
+     * Calculates the vertex points of the hexagon based on its center and radius.
+     */
     private void calculateVertexPoints() {
         xPoints = new int[6];
         yPoints = new int[6];
@@ -49,7 +66,11 @@ public class HexTile {
             yPoints[i] = (int) (y + radius * Math.sin(angle));
         }
     }
-
+    /**
+     * Draws the hexagon on a given Graphics2D object.
+     *
+     * @param g The Graphics2D object for drawing the hexagon.
+     */
     public void draw(Graphics2D g) {
         Path2D hexagon = createHexagonPath();
 
@@ -90,7 +111,11 @@ public class HexTile {
         g.drawString(String.valueOf(number), textX, textY);
     }
 
-    // Create a hexagonal path for drawing (rotated for flat-top)
+    /**
+     * Creates a hexagonal path for drawing (rotated for a flat-top hexagon).
+     *
+     * @return A Path2D object representing the hexagonal path.
+     */
     private Path2D createHexagonPath() {
         Path2D hex = new Path2D.Double();
         for (int i = 0; i < 6; i++) {

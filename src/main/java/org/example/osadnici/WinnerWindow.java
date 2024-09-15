@@ -4,7 +4,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * The WinnerWindow class represents a window that displays the winner of the game.
+ */
 public class WinnerWindow extends JFrame {
+
+    /**
+     * Constructs a WinnerWindow object, setting up the initial state and UI components.
+     *
+     * @param game The Game object that contains the game state and logic.
+     */
     public WinnerWindow(Game game) {
 
         GenericWindow.changeBackground(this);
@@ -31,6 +40,9 @@ public class WinnerWindow extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Sets the window to fullscreen mode.
+     */
     private void setFullscreen() {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         if (gd.isFullScreenSupported()) {
@@ -41,6 +53,11 @@ public class WinnerWindow extends JFrame {
         }
     }
 
+    /**
+     * Displays the WinnerWindow.
+     *
+     * @param game The Game object that contains the game state and logic.
+     */
     public static void display(Game game) {
         SwingUtilities.invokeLater(() -> new WinnerWindow(game));
     }
